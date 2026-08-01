@@ -1,0 +1,12 @@
+Source: ros-jazzy-roboplan-ros-franka
+Section: misc
+Priority: optional
+Maintainer: "Sebastian Castro" <sebas.a.castro@gmail.com>
+Build-Depends: debhelper (>= 9.0.0), ros-jazzy-ament-cmake, ros-jazzy-roboplan, ros-jazzy-roboplan-example-models, ros-jazzy-roboplan-ros-examples, ros-jazzy-xacro, ros-jazzy-ros-workspace
+Homepage: https://roboplan-ros.readthedocs.io
+Standards-Version: 3.9.2
+
+Package: ros-jazzy-roboplan-ros-franka
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, ros-jazzy-controller-manager, ros-jazzy-joint-state-broadcaster, ros-jazzy-joint-trajectory-controller, ros-jazzy-mujoco-ros2-control, ros-jazzy-parallel-gripper-controller, ros-jazzy-roboplan, ros-jazzy-roboplan-example-models, ros-jazzy-roboplan-ros-examples, ros-jazzy-robot-state-publisher, ros-jazzy-topic-tools, ros-jazzy-xacro, ros-jazzy-ros-workspace
+Description: Franka arm ROS example for RoboPlan.
