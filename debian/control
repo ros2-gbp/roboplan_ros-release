@@ -1,0 +1,12 @@
+Source: ros-jazzy-roboplan-ros-py
+Section: misc
+Priority: optional
+Maintainer: "Sebastian Castro" <sebas.a.castro@gmail.com>
+Build-Depends: debhelper (>= 9.0.0), python3-pytest <!nocheck>, ros-jazzy-builtin-interfaces, ros-jazzy-rclpy, ros-jazzy-roboplan, ros-jazzy-roboplan-ros-cpp, ros-jazzy-sensor-msgs, ros-jazzy-trajectory-msgs, ros-jazzy-ros-workspace, python3-all, python3-setuptools, dh-python
+Homepage: https://roboplan-ros.readthedocs.io
+Standards-Version: 3.9.2
+
+Package: ros-jazzy-roboplan-ros-py
+Architecture: any
+Depends: ${python3:Depends}, ${misc:Depends}, ros-jazzy-builtin-interfaces, ros-jazzy-rclpy, ros-jazzy-roboplan, ros-jazzy-roboplan-ros-cpp, ros-jazzy-sensor-msgs, ros-jazzy-trajectory-msgs, ros-jazzy-ros-workspace
+Description: ROS 2 Python bindings for the roboplan motion planning library.
