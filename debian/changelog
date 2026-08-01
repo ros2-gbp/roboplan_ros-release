@@ -1,0 +1,27 @@
+ros-rolling-roboplan-ros-visualization (0.6.0-1trixie) trixie; urgency=high
+
+  * Support macOS and Windows through Pixi (#58 <https://github.com/open-planning/roboplan-ros/issues/58>)
+  * Contributors: Sebastian Castro, Erik Holum
+
+ -- "Sebastian Castro" <sebas.a.castro@gmail.com>  Fri, 31 Jul 2026 04:00:00 -0000
+
+ros-rolling-roboplan-ros-visualization (0.5.1-1trixie) trixie; urgency=high
+
+  * Add Lyrical and Rolling pixi environments and CI jobs (#54 <https://github.com/open-planning/roboplan-ros/issues/54>)
+  * Generic solve function in interactive IK and OInK example (#52 <https://github.com/open-planning/roboplan-ros/issues/52>)
+  * Preview trajectory as line list marker (#51 <https://github.com/open-planning/roboplan-ros/issues/51>)
+  * Allow visualizing joint groups (#50 <https://github.com/open-planning/roboplan-ros/issues/50>)
+  * Bring in IK base frame fixes and RRT pipeline improvements (#47 <https://github.com/open-planning/roboplan-ros/issues/47>)
+  * Bumping RoboPlan, dependencies, and no more pixi-build-ros (#42 <https://github.com/open-planning/roboplan-ros/issues/42>)
+  * Add bindings documentation and CI check (#37 <https://github.com/open-planning/roboplan-ros/issues/37>)
+  * Update RTD Docs, add a design philosophy (#34 <https://github.com/open-planning/roboplan-ros/issues/34>)
+  * Update iMarker IK Backend (#33 <https://github.com/open-planning/roboplan-ros/issues/33>)
+  * Convert the visualizer to cpp and add bindings (#30 <https://github.com/open-planning/roboplan-ros/issues/30>)
+  * Docs: Add ReadTheDocs pages for C++ and Python API (#28 <https://github.com/open-planning/roboplan-ros/issues/28>)
+  * Add JointState Mapping and Bindings for Type Conversion Functions (#19 <https://github.com/open-planning/roboplan-ros/issues/19>)
+  * IK solutions in RViz with All Built-Ins (#14 <https://github.com/open-planning/roboplan-ros/issues/14>)
+  * Contributors: Erik Holum, Sanjeev, Sebastian Castro
+
+ -- "Sebastian Castro" <sebas.a.castro@gmail.com>  Mon, 13 Jul 2026 04:00:00 -0000
+
+
