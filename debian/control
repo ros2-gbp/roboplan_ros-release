@@ -1,0 +1,12 @@
+Source: ros-kilted-roboplan-ros-py
+Section: misc
+Priority: optional
+Maintainer: "Sebastian Castro" <sebas.a.castro@gmail.com>
+Build-Depends: debhelper (>= 9.0.0), python3-pytest <!nocheck>, ros-kilted-builtin-interfaces, ros-kilted-rclpy, ros-kilted-roboplan, ros-kilted-roboplan-ros-cpp, ros-kilted-sensor-msgs, ros-kilted-trajectory-msgs, ros-kilted-ros-workspace, python3-all, python3-setuptools, dh-python
+Homepage: https://roboplan-ros.readthedocs.io
+Standards-Version: 3.9.2
+
+Package: ros-kilted-roboplan-ros-py
+Architecture: any
+Depends: ${python3:Depends}, ${misc:Depends}, ros-kilted-builtin-interfaces, ros-kilted-rclpy, ros-kilted-roboplan, ros-kilted-roboplan-ros-cpp, ros-kilted-sensor-msgs, ros-kilted-trajectory-msgs, ros-kilted-ros-workspace
+Description: ROS 2 Python bindings for the roboplan motion planning library.
