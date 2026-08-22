@@ -1,0 +1,12 @@
+Source: ros-jazzy-roboplan-ros-cpp
+Section: misc
+Priority: optional
+Maintainer: "Sebastian Castro" <sebas.a.castro@gmail.com>
+Build-Depends: debhelper (>= 9.0.0), libeigen3-dev, nanobind-dev, python3-dev, python3-typing-extensions, ros-jazzy-ament-cmake, ros-jazzy-ament-index-cpp <!nocheck>, ros-jazzy-builtin-interfaces, ros-jazzy-geometry-msgs, ros-jazzy-pinocchio, ros-jazzy-roboplan, ros-jazzy-roboplan-example-models <!nocheck>, ros-jazzy-rosidl-generator-cpp, ros-jazzy-sensor-msgs, ros-jazzy-tf2-eigen, ros-jazzy-trajectory-msgs, ros-jazzy-ros-workspace
+Homepage: https://roboplan-ros.readthedocs.io
+Standards-Version: 3.9.2
+
+Package: ros-jazzy-roboplan-ros-cpp
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, libeigen3-dev, ros-jazzy-geometry-msgs, ros-jazzy-pinocchio, ros-jazzy-roboplan, ros-jazzy-rosidl-generator-cpp, ros-jazzy-sensor-msgs, ros-jazzy-tf2-eigen, ros-jazzy-trajectory-msgs, ros-jazzy-ros-workspace
+Description: ROS 2 C++ bindings for the RoboPlan motion planning library.
