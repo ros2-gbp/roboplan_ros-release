@@ -1,0 +1,12 @@
+Source: ros-kilted-roboplan-ros-examples
+Section: misc
+Priority: optional
+Maintainer: "Sebastian Castro" <sebas.a.castro@gmail.com>
+Build-Depends: debhelper (>= 9.0.0), ros-kilted-ament-cmake-python, ros-kilted-ros-workspace
+Homepage: https://roboplan-ros.readthedocs.io
+Standards-Version: 3.9.2
+
+Package: ros-kilted-roboplan-ros-examples
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, ros-kilted-control-msgs, ros-kilted-rclpy, ros-kilted-roboplan, ros-kilted-sensor-msgs, ros-kilted-std-msgs, ros-kilted-visualization-msgs, ros-kilted-ros-workspace
+Description: Examples of using RoboPlan in the ROS ecosystem.
