@@ -1,0 +1,7 @@
+matplotlib
+numpy
+obj2mjcf
+opencv-contrib-python-headless
+plyfile
+tyro
+viser>=1.0.29
