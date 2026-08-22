@@ -1,0 +1,12 @@
+Source: ros-rolling-roboplan-ros-franka
+Section: misc
+Priority: optional
+Maintainer: "Sebastian Castro" <sebas.a.castro@gmail.com>
+Build-Depends: debhelper (>= 9.0.0), ros-rolling-ament-cmake, ros-rolling-roboplan, ros-rolling-roboplan-example-models, ros-rolling-roboplan-ros-examples, ros-rolling-xacro, ros-rolling-ros-workspace
+Homepage: https://roboplan-ros.readthedocs.io
+Standards-Version: 3.9.2
+
+Package: ros-rolling-roboplan-ros-franka
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, ros-rolling-controller-manager, ros-rolling-joint-state-broadcaster, ros-rolling-joint-trajectory-controller, ros-rolling-parallel-gripper-controller, ros-rolling-roboplan, ros-rolling-roboplan-example-models, ros-rolling-roboplan-ros-examples, ros-rolling-robot-state-publisher, ros-rolling-topic-tools, ros-rolling-xacro, ros-rolling-ros-workspace
+Description: Franka arm ROS example for RoboPlan.
