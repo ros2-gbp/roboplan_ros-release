@@ -1,0 +1,26 @@
+ros-lyrical-roboplan-ros-py (0.6.1-1trixie) trixie; urgency=high
+
+
+
+ -- "Sebastian Castro" <sebas.a.castro@gmail.com>  Thu, 20 Aug 2026 04:00:00 -0000
+
+ros-lyrical-roboplan-ros-py (0.6.0-1trixie) trixie; urgency=high
+
+
+
+ -- "Sebastian Castro" <sebas.a.castro@gmail.com>  Fri, 31 Jul 2026 04:00:00 -0000
+
+ros-lyrical-roboplan-ros-py (0.5.1-1trixie) trixie; urgency=high
+
+  * Bumping RoboPlan, dependencies, and no more pixi-build-ros (#42 <https://github.com/open-planning/roboplan-ros/issues/42>)
+  * Add a very basic RRT planning example (#41 <https://github.com/open-planning/roboplan-ros/issues/41>)
+  * Update RTD Docs, add a design philosophy (#34 <https://github.com/open-planning/roboplan-ros/issues/34>)
+  * Install nanobind from rosdep and pixi (#26 <https://github.com/open-planning/roboplan-ros/issues/26>)
+  * Add JointState Mapping and Bindings for Type Conversion Functions (#19 <https://github.com/open-planning/roboplan-ros/issues/19>)
+  * IK solutions in RViz with All Built-Ins (#14 <https://github.com/open-planning/roboplan-ros/issues/14>)
+  * Initial workspace and base package setup (#3 <https://github.com/open-planning/roboplan-ros/issues/3>)
+  * Contributors: Erik Holum
+
+ -- "Sebastian Castro" <sebas.a.castro@gmail.com>  Mon, 13 Jul 2026 04:00:00 -0000
+
+
