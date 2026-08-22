@@ -1,0 +1,12 @@
+Source: ros-rolling-roboplan-ros-examples
+Section: misc
+Priority: optional
+Maintainer: "Sebastian Castro" <sebas.a.castro@gmail.com>
+Build-Depends: debhelper (>= 9.0.0), ros-rolling-ament-cmake-python, ros-rolling-ros-workspace
+Homepage: https://roboplan-ros.readthedocs.io
+Standards-Version: 3.9.2
+
+Package: ros-rolling-roboplan-ros-examples
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, ros-rolling-control-msgs, ros-rolling-rclpy, ros-rolling-roboplan, ros-rolling-sensor-msgs, ros-rolling-std-msgs, ros-rolling-visualization-msgs, ros-rolling-ros-workspace
+Description: Examples of using RoboPlan in the ROS ecosystem.
