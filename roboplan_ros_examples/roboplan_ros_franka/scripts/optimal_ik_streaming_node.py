@@ -30,7 +30,12 @@ from visualization_msgs.msg import MarkerArray
 from interactive_markers import InteractiveMarkerServer, MenuHandler
 from std_srvs.srv import Trigger
 
-from roboplan.core import CartesianConfiguration, Scene
+from roboplan.core import (
+    CartesianConfiguration,
+    Scene,
+    loadJointLimitsConfig,
+    loadUrdfSceneDescriptionFromXml,
+)
 from roboplan.filters import SE3LowPassFilter
 from roboplan.optimal_ik import (
     ConfigurationTask,
@@ -158,11 +163,10 @@ class CartesianServoNode(Node):
         package_paths = [pkg_share_dir]
         self._scene = Scene(
             name="cartesian_servo_scene",
-            urdf=urdf_xml,
-            srdf=srdf_xml,
-            package_paths=package_paths,
-            yaml_config_path=yaml_config_path,
+            description=loadUrdfSceneDescriptionFromXml(urdf_xml, package_paths),
         )
+        self._scene.importSrdf(srdf_xml)
+        self._scene.importJointLimitsFromConfig(loadJointLimitsConfig(yaml_config_path))
 
         # Optionally add obstacles (e.g., a tabletop) to the scene.
         self._obstacles = []
@@ -361,7 +365,6 @@ class CartesianServoNode(Node):
             if not self._paused:
                 with self._lock:
                     q_current = np.array(self._scene.getCurrentJointPositions())
-                    self._scene.forwardKinematics(q_current, self._tip_link)
 
                     if self._reference_filter_tau > 0:
                         filtered = self._reference_filter.update(
@@ -373,7 +376,7 @@ class CartesianServoNode(Node):
 
                     try:
                         self._oink.solveIk(
-                            self._scene,
+                            q_current,
                             self._tasks,
                             self._constraints,
                             self._barriers,
@@ -387,18 +390,10 @@ class CartesianServoNode(Node):
                         )
 
                     self._delta_q_full[self._oink.v_indices] = self._delta_q
-                    if self._barriers:
-                        self._oink.enforceBarriers(
-                            self._scene,
-                            self._barriers,
-                            self._delta_q_full,
-                            tolerance=0.0,
-                        )
 
                     q_current = self._scene.integrate(q_current, self._delta_q_full)
 
                     self._scene.setJointPositions(q_current)
-                    self._scene.forwardKinematics(q_current, self._tip_link)
                     self._latest_joint_positions = q_current
 
                 self._publish_joint_command(q_current)
@@ -471,7 +466,6 @@ class CartesianServoNode(Node):
             self._config_task.setTargetConfiguration(
                 self._latest_joint_positions[self._oink.q_indices]
             )
-            self._scene.forwardKinematics(self._latest_joint_positions, self._tip_link)
             initial_pose = self._scene.forwardKinematics(
                 self._latest_joint_positions, self._tip_link, self._base_link
             )
