@@ -102,12 +102,16 @@ static const std::string TWO_LINK_URDF = R"(<?xml version="1.0"?>
 </robot>
 )";
 
-// Defines a group containing only the first joint/link, plus a group that lists the second
-// joint and additionally pulls in the first link via an explicit <link> element.
+// Defines a group containing only the first joint (which carries the second link along), a group
+// containing only the second joint/link, plus a group that lists the second joint and additionally
+// pulls in the first link via an explicit <link> element.
 static const std::string TWO_LINK_SRDF = R"(<?xml version="1.0"?>
 <robot name="two_link_robot">
   <group name="first">
     <joint name="joint1"/>
+  </group>
+  <group name="second">
+    <joint name="joint2"/>
   </group>
   <group name="second_plus">
     <joint name="joint2"/>
@@ -116,10 +120,21 @@ static const std::string TWO_LINK_SRDF = R"(<?xml version="1.0"?>
 </robot>
 )";
 
+static std::vector<decltype(visualization_msgs::msg::Marker::type)>
+markerTypes(const std::vector<visualization_msgs::msg::Marker>& markers) {
+  std::vector<decltype(visualization_msgs::msg::Marker::type)> types;
+  for (const auto& marker : markers) {
+    types.push_back(marker.type);
+  }
+  return types;
+}
+
 class RoboplanVisualizerTest : public ::testing::Test {};
 
 TEST_F(RoboplanVisualizerTest, VisualizeFixedJointConfiguration) {
-  const auto scene = std::make_shared<roboplan::Scene>("test", BOX_URDF, EMPTY_SRDF);
+  const auto scene = std::make_shared<roboplan::Scene>(
+      "test", roboplan::loadUrdfSceneDescriptionFromXml(BOX_URDF));
+  ASSERT_TRUE(scene->importSrdf(EMPTY_SRDF).has_value());
   RoboplanVisualizer viz(scene, BOX_URDF);
 
   const Eigen::VectorXd q = scene->getCurrentJointPositions();
@@ -134,7 +149,9 @@ TEST_F(RoboplanVisualizerTest, VisualizeFixedJointConfiguration) {
 }
 
 TEST_F(RoboplanVisualizerTest, VisualizeRevoluteJointConfiguration) {
-  const auto scene = std::make_shared<roboplan::Scene>("test", REVOLUTE_URDF, EMPTY_SRDF);
+  const auto scene = std::make_shared<roboplan::Scene>(
+      "test", roboplan::loadUrdfSceneDescriptionFromXml(REVOLUTE_URDF));
+  ASSERT_TRUE(scene->importSrdf(EMPTY_SRDF).has_value());
   RoboplanVisualizer viz(scene, REVOLUTE_URDF);
 
   const Eigen::VectorXd q = scene->getCurrentJointPositions();
@@ -152,7 +169,9 @@ TEST_F(RoboplanVisualizerTest, VisualizeRevoluteJointConfiguration) {
 }
 
 TEST_F(RoboplanVisualizerTest, VisualizeFullSceneByDefault) {
-  const auto scene = std::make_shared<roboplan::Scene>("test", TWO_LINK_URDF, TWO_LINK_SRDF);
+  const auto scene = std::make_shared<roboplan::Scene>(
+      "test", roboplan::loadUrdfSceneDescriptionFromXml(TWO_LINK_URDF));
+  ASSERT_TRUE(scene->importSrdf(TWO_LINK_SRDF).has_value());
   RoboplanVisualizer viz(scene, TWO_LINK_URDF);
 
   const Eigen::VectorXd q = scene->getCurrentJointPositions();
@@ -167,24 +186,48 @@ TEST_F(RoboplanVisualizerTest, VisualizeFullSceneByDefault) {
 }
 
 TEST_F(RoboplanVisualizerTest, VisualizeSingleJointGroupViaSetGroup) {
-  const auto scene = std::make_shared<roboplan::Scene>("test", TWO_LINK_URDF, TWO_LINK_SRDF);
+  const auto scene = std::make_shared<roboplan::Scene>(
+      "test", roboplan::loadUrdfSceneDescriptionFromXml(TWO_LINK_URDF));
+  ASSERT_TRUE(scene->importSrdf(TWO_LINK_SRDF).has_value());
   RoboplanVisualizer viz(scene, TWO_LINK_URDF);
 
   const Eigen::VectorXd q = scene->getCurrentJointPositions();
 
-  // The "first" group only drives link1, which carries the box geometry.
-  viz.set_group("first");
-  const auto first_markers = viz.markers_from_configuration(q);
-  ASSERT_EQ(first_markers.markers.size(), 1u);
-  EXPECT_EQ(first_markers.markers[0].type, visualization_msgs::msg::Marker::CUBE);
+  // The "second" group only drives link2, which carries the sphere geometry. The box on link1
+  // sits above the group in the kinematic tree and does not move with it, so it is not drawn.
+  viz.set_group("second");
+  const auto second_markers = viz.markers_from_configuration(q);
+  ASSERT_EQ(second_markers.markers.size(), 1u);
+  EXPECT_EQ(second_markers.markers[0].type, visualization_msgs::msg::Marker::SPHERE);
 
   // Switching back to the whole scene takes effect immediately.
   viz.set_group("");
   ASSERT_EQ(viz.markers_from_configuration(q).markers.size(), 2u);
 }
 
+TEST_F(RoboplanVisualizerTest, VisualizeGroupCarriesDownstreamLinks) {
+  const auto scene = std::make_shared<roboplan::Scene>(
+      "test", roboplan::loadUrdfSceneDescriptionFromXml(TWO_LINK_URDF));
+  ASSERT_TRUE(scene->importSrdf(TWO_LINK_SRDF).has_value());
+  // The "first" group only contains joint1, but link2 hangs below it and moves whenever joint1
+  // does, so both geometries are rendered.
+  RoboplanVisualizer viz(scene, TWO_LINK_URDF, "world", "/roboplan", "first");
+
+  const Eigen::VectorXd q = scene->getCurrentJointPositions();
+  const auto markers = viz.markers_from_configuration(q);
+  ASSERT_EQ(markers.markers.size(), 2u);
+
+  const auto types = markerTypes(markers.markers);
+  EXPECT_NE(std::find(types.begin(), types.end(), visualization_msgs::msg::Marker::CUBE),
+            types.end());
+  EXPECT_NE(std::find(types.begin(), types.end(), visualization_msgs::msg::Marker::SPHERE),
+            types.end());
+}
+
 TEST_F(RoboplanVisualizerTest, VisualizeGroupWithExplicitLink) {
-  const auto scene = std::make_shared<roboplan::Scene>("test", TWO_LINK_URDF, TWO_LINK_SRDF);
+  const auto scene = std::make_shared<roboplan::Scene>(
+      "test", roboplan::loadUrdfSceneDescriptionFromXml(TWO_LINK_URDF));
+  ASSERT_TRUE(scene->importSrdf(TWO_LINK_SRDF).has_value());
   // The "second_plus" group drives link2 (sphere) and additionally lists link1 (box) explicitly,
   // so both geometries should be rendered.
   RoboplanVisualizer viz(scene, TWO_LINK_URDF, "world", "/roboplan", "second_plus");
@@ -193,10 +236,7 @@ TEST_F(RoboplanVisualizerTest, VisualizeGroupWithExplicitLink) {
   const auto markers = viz.markers_from_configuration(q);
   ASSERT_EQ(markers.markers.size(), 2u);
 
-  std::vector<decltype(visualization_msgs::msg::Marker::type)> types;
-  for (const auto& marker : markers.markers) {
-    types.push_back(marker.type);
-  }
+  const auto types = markerTypes(markers.markers);
   EXPECT_NE(std::find(types.begin(), types.end(), visualization_msgs::msg::Marker::CUBE),
             types.end());
   EXPECT_NE(std::find(types.begin(), types.end(), visualization_msgs::msg::Marker::SPHERE),
@@ -204,20 +244,24 @@ TEST_F(RoboplanVisualizerTest, VisualizeGroupWithExplicitLink) {
 }
 
 TEST_F(RoboplanVisualizerTest, ConstructorGroupIsUsed) {
-  const auto scene = std::make_shared<roboplan::Scene>("test", TWO_LINK_URDF, TWO_LINK_SRDF);
-  // Configure the visualizer with the "first" group as its selection.
-  RoboplanVisualizer viz(scene, TWO_LINK_URDF, "world", "/roboplan", "first");
+  const auto scene = std::make_shared<roboplan::Scene>(
+      "test", roboplan::loadUrdfSceneDescriptionFromXml(TWO_LINK_URDF));
+  ASSERT_TRUE(scene->importSrdf(TWO_LINK_SRDF).has_value());
+  // Configure the visualizer with the "second" group as its selection.
+  RoboplanVisualizer viz(scene, TWO_LINK_URDF, "world", "/roboplan", "second");
 
   const Eigen::VectorXd q = scene->getCurrentJointPositions();
 
-  // The constructor's group is used (link1, the box).
+  // The constructor's group is used (link2, the sphere).
   const auto markers = viz.markers_from_configuration(q);
   ASSERT_EQ(markers.markers.size(), 1u);
-  EXPECT_EQ(markers.markers[0].type, visualization_msgs::msg::Marker::CUBE);
+  EXPECT_EQ(markers.markers[0].type, visualization_msgs::msg::Marker::SPHERE);
 }
 
 TEST_F(RoboplanVisualizerTest, UnknownGroupThrows) {
-  const auto scene = std::make_shared<roboplan::Scene>("test", TWO_LINK_URDF, TWO_LINK_SRDF);
+  const auto scene = std::make_shared<roboplan::Scene>(
+      "test", roboplan::loadUrdfSceneDescriptionFromXml(TWO_LINK_URDF));
+  ASSERT_TRUE(scene->importSrdf(TWO_LINK_SRDF).has_value());
 
   // An unknown group is rejected both at construction and via set_group.
   EXPECT_THROW(RoboplanVisualizer(scene, TWO_LINK_URDF, "world", "/roboplan", "does_not_exist"),
