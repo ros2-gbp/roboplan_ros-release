@@ -26,8 +26,7 @@ find_package(ament_cmake_python REQUIRED)
 find_package(builtin_interfaces REQUIRED)
 find_package(geometry_msgs REQUIRED)
 find_package(interactive_markers REQUIRED)
-find_package(roboplan REQUIRED)
-find_package(roboplan_simple_ik REQUIRED)
+find_package(roboplan_core REQUIRED)
 find_package(roboplan_ros_cpp REQUIRED)
 find_package(sensor_msgs REQUIRED)
 find_package(visualization_msgs REQUIRED)
@@ -44,7 +43,6 @@ target_include_directories(roboplan_ros_visualization PUBLIC
 target_link_libraries(roboplan_ros_visualization
   PUBLIC
     roboplan::roboplan
-    roboplan_simple_ik::roboplan_simple_ik
     roboplan_ros_cpp::roboplan_ros_cpp
     pinocchio::pinocchio
     ${tf2_eigen_TARGETS}
@@ -56,7 +54,7 @@ target_link_libraries(roboplan_ros_visualization
 )
 set_property(TARGET roboplan_ros_visualization PROPERTY CXX_STANDARD 20)
 ament_export_dependencies(
-  roboplan
+  roboplan_core
   Eigen3
   pinocchio
   tf2_eigen
