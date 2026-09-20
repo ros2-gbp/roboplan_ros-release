@@ -22,7 +22,7 @@ if(APPLE)
 endif()
 
 find_package(ament_cmake REQUIRED)
-find_package(roboplan REQUIRED)
+find_package(roboplan_core REQUIRED)
 find_package(Eigen3 REQUIRED)
 find_package(geometry_msgs REQUIRED)
 find_package(pinocchio REQUIRED)
@@ -50,7 +50,7 @@ target_link_libraries(roboplan_ros_cpp
 )
 set_property(TARGET roboplan_ros_cpp PROPERTY CXX_STANDARD 20)
 ament_export_dependencies(
-  roboplan
+  roboplan_core
   Eigen3
   pinocchio
   tf2_eigen
