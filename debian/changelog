@@ -1,0 +1,45 @@
+ros-rolling-roboplan-ros-franka (0.7.0-1trixie) trixie; urgency=high
+
+  * Update Scene Construction Post SRDF Changes (#76 <https://github.com/open-planning/roboplan-ros/issues/76>)
+  * Use helper function to load descriptions for Scene construction (#66 <https://github.com/open-planning/roboplan-ros/issues/66>)
+  * Robot visualization improvements (#72 <https://github.com/open-planning/roboplan-ros/issues/72>)
+  * Fix rosdeps after roboplan_core package transition (#73 <https://github.com/open-planning/roboplan-ros/issues/73>)
+  * Add stable ABI modules for nanobind bindings to match core roboplan (#69 <https://github.com/open-planning/roboplan-ros/issues/69>)
+  * Consolidate build jobs as per roboplan (#67 <https://github.com/open-planning/roboplan-ros/issues/67>)
+  * Include thread safety branch (#63 <https://github.com/open-planning/roboplan-ros/issues/63>)
+  * Contributors: Erik Holum, Sebastian Castro
+
+ -- "Sebastian Castro" <sebas.a.castro@gmail.com>  Sat, 19 Sep 2026 04:00:00 -0000
+
+ros-rolling-roboplan-ros-franka (0.6.1-1trixie) trixie; urgency=high
+
+
+
+ -- "Sebastian Castro" <sebas.a.castro@gmail.com>  Thu, 20 Aug 2026 04:00:00 -0000
+
+ros-rolling-roboplan-ros-franka (0.6.0-1trixie) trixie; urgency=high
+
+  * Support macOS and Windows through Pixi (#58 <https://github.com/open-planning/roboplan-ros/issues/58>)
+  * Add mujoco_ros2_control option and gripper open/close to examples (#57 <https://github.com/open-planning/roboplan-ros/issues/57>)
+  * Contributors: Sebastian Castro, Erik Holum
+
+ -- "Sebastian Castro" <sebas.a.castro@gmail.com>  Fri, 31 Jul 2026 04:00:00 -0000
+
+ros-rolling-roboplan-ros-franka (0.5.1-1trixie) trixie; urgency=high
+
+  * Generic solve function in interactive IK and OInK example (#52 <https://github.com/open-planning/roboplan-ros/issues/52>)
+  * Preview trajectory as line list marker (#51 <https://github.com/open-planning/roboplan-ros/issues/51>)
+  * Allow visualizing joint groups (#50 <https://github.com/open-planning/roboplan-ros/issues/50>)
+  * Fix Franka Planning Demo (#49 <https://github.com/open-planning/roboplan-ros/issues/49>)
+  * Bring in IK base frame fixes and RRT pipeline improvements (#47 <https://github.com/open-planning/roboplan-ros/issues/47>)
+  * Update RoboPlan to 0.4.0 with additional fixes (#46 <https://github.com/open-planning/roboplan-ros/issues/46>)
+  * Bumping RoboPlan, dependencies, and no more pixi-build-ros (#42 <https://github.com/open-planning/roboplan-ros/issues/42>)
+  * Add a very basic RRT planning example (#41 <https://github.com/open-planning/roboplan-ros/issues/41>)
+  * Update type conversions for new RoboPlan mimic behavior (#40 <https://github.com/open-planning/roboplan-ros/issues/40>)
+  * Update iMarker IK Backend (#33 <https://github.com/open-planning/roboplan-ros/issues/33>)
+  * Use the pixi-build-ros backend (#32 <https://github.com/open-planning/roboplan-ros/issues/32>)
+  * Contributors: Erik Holum, Ola Ghattas, Sebastian Castro
+
+ -- "Sebastian Castro" <sebas.a.castro@gmail.com>  Mon, 13 Jul 2026 04:00:00 -0000
+
+
