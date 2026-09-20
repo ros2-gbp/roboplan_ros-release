@@ -6,7 +6,7 @@ authors = [
 channels = ["conda-forge"]
 name = "roboplan-ros"
 platforms = ["linux-64", "linux-aarch64", "osx-arm64", "win-64"]
-version = "0.6.1"
+version = "0.7.0"
 
 [tasks]
 # Clones the matching RoboPlan release (if the folder does not exist) and sets up colcon mixins.
@@ -20,12 +20,6 @@ build = { cmd = ["colcon", "build"] }
 build-symlink = { cmd = ["colcon", "build", "--symlink-install"] }
 test = { cmd = ["colcon", "test"] }
 test-result = { cmd = ["colcon", "test-result", "--verbose"] }
-
-# Use the mold linker on Linux. Added here rather than in colcon_defaults.yaml,
-# since the defaults file applies to all platforms.
-[target.linux.tasks]
-build = { cmd = ["colcon", "build", "--mixin", "mold"] }
-build-symlink = { cmd = ["colcon", "build", "--symlink-install", "--mixin", "mold"] }
 
 # Use the MSVC-compatible clang driver: conda-forge packages are built with
 # MSVC and export MSVC-style flags that the GNU-style clang++ driver rejects.
@@ -57,10 +51,11 @@ matplotlib = ">=3.10.6,<4"
 filelock = ">=3.20.0,<4"
 numpy = ">=1.26.4,<3"
 nanobind = ">=2.12.0,<3"
-libtoppra  = ">=0.6.4,<0.7"
+libtoppra  = ">=0.6.9,<0.7"
 proxsuite = ">=0.7.3,<0.8"
 
 viser = ">=1.0.29,<2.0"  # See https://github.com/viser-project/viser/issues/719
+plyfile = ">=1.1,<2"
 pycollada = ">=0.9.2, <0.10"
 nodeenv = ">=1.10.0, <2"
 
@@ -97,6 +92,8 @@ LIBRARY_PATH = "${CONDA_PREFIX}/lib:${LIBRARY_PATH}"
 LD_LIBRARY_PATH = "${CONDA_PREFIX}/lib:${LD_LIBRARY_PATH}"
 LDFLAGS = "-L${CONDA_PREFIX}/lib -Wl,-rpath,${CONDA_PREFIX}/lib"
 
+# On Linux, we want to use the mold linker. Rather than a special-case colcon mixin,
+# we just append to the CXXFLAGS so it's additive over what is in colcon_defaults.yaml.
 [target.linux.activation.env]
 CXXFLAGS = "-fuse-ld=mold"
 
@@ -114,7 +111,13 @@ rolling = { features = ["rolling"] }
 lyrical = { features = ["lyrical"] }
 kilted = { features = ["kilted"] }
 jazzy = { features = ["jazzy"] }
-humble = { features = ["humble"] }
+
+# Composing existing packages with core RoboPlan from Conda to supporting
+# building against Conda built
+rolling-conda-roboplan = { features = ["rolling", "conda-roboplan"] }
+lyrical-conda-roboplan = { features = ["lyrical", "conda-roboplan"] }
+kilted-conda-roboplan = { features = ["kilted", "conda-roboplan"] }
+jazzy-conda-roboplan = { features = ["jazzy", "conda-roboplan"] }
 
 ###################
 ## ROS 2 Rolling ##
@@ -268,40 +271,34 @@ ros-jazzy-mujoco-ros2-control = "*"
 [feature.jazzy.activation.env]
 ROS_DISTRO = "jazzy"
 
-##################
-## ROS 2 Humble ##
-##################
-[feature.humble]
-channels = ["https://prefix.dev/robostack-humble"]
+# Adds conda-forge's prebuilt roboplan core on top of a ROS-distro
+# feature above, instead of cloning/building roboplan from source in the
+# same environment. Must be used with the conda feature above.
+[feature.conda-roboplan.dependencies]
+roboplan-python = "*"
+roboplan-simple-ik-python = "*"
+roboplan-oink-python = "*"
 
-[feature.humble.dependencies]
-ros-humble-ros-base = "*"
+# Must match the nanobind-abi generation roboplan-python (conda-forge) was
+# built against!
+# TODO: drop once roboplan-feedstock exports this transitively.
+nanobind-abi = "==20"
 
-# RoboPlan and RoboPlan ROS dependencies
-ros-humble-builtin-interfaces = "*"
-ros-humble-console-bridge-vendor = "*"
-ros-humble-controller-manager = "*"
-ros-humble-geometry-msgs = "*"
-ros-humble-interactive-markers = "*"
-ros-humble-joint-state-broadcaster = "*"
-ros-humble-joint-trajectory-controller = "*"
-ros-humble-robot-state-publisher = "*"
-ros-humble-ros2controlcli = "*"
-ros-humble-rviz2 = "*"
-ros-humble-sensor-msgs = "*"
-ros-humble-tf2-eigen = "*"
-ros-humble-tinyxml2-vendor = "*"
-ros-humble-tl-expected = "*"
-ros-humble-topic-tools = "*"
-ros-humble-trajectory-msgs = "*"
-ros-humble-urdfdom = "*"
-ros-humble-visualization-msgs = "*"
-ros-humble-xacro = "*"
-ros-humble-yaml-cpp-vendor = "*"
+[feature.conda-roboplan.tasks]
+setup = { cmd = """
+colcon mixin add default https://raw.githubusercontent.com/colcon/colcon-mixin-repository/master/index.yaml || true && \
+colcon mixin update default
+""" }
+build = { cmd = ["colcon", "build", "--cmake-args", "-DROBOPLAN_ROS_STABLE_ABI=ON"] }
+build-symlink = { cmd = ["colcon", "build", "--symlink-install", "--cmake-args", "-DROBOPLAN_ROS_STABLE_ABI=ON"] }
 
-# Pinocchio from conda-forge, since RoboStack does not build it for win-64.
-# Humble's boost pin limits Pinocchio to 4.0.0, unlike the newer distros.
-pinocchio = ">=4.0.0,<5"
-
-[feature.humble.activation.env]
-ROS_DISTRO = "humble"
+[feature.conda-roboplan.target.win.tasks]
+build = { cmd = [
+  "colcon", "build", "--cmake-args",
+  "-GNinja",
+  "-DCMAKE_C_COMPILER=clang-cl",
+  "-DCMAKE_CXX_COMPILER=clang-cl",
+  "-DCMAKE_LINKER=lld-link",
+  "-DPython3_EXECUTABLE=$CONDA_PREFIX/python.exe",  # conda envs ship no python3.exe on Windows
+  "-DROBOPLAN_ROS_STABLE_ABI=ON",
+] }

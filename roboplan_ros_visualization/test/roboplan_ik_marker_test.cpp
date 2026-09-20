@@ -56,7 +56,9 @@ static const std::string TWO_LINK_SRDF = R"(<?xml version="1.0"?>
 class RoboplanIkMarkerTest : public ::testing::Test {};
 
 TEST_F(RoboplanIkMarkerTest, MakeInteractiveMarkerDefaultFrame) {
-  auto scene_ = std::make_shared<roboplan::Scene>("test", TWO_LINK_URDF, TWO_LINK_SRDF);
+  auto scene_ = std::make_shared<roboplan::Scene>(
+      "test", roboplan::loadUrdfSceneDescriptionFromXml(TWO_LINK_URDF));
+  ASSERT_TRUE(scene_->importSrdf(TWO_LINK_SRDF).has_value());
 
   // Specify links even though it's a silly robot
   const std::string joint_group = "arm";
