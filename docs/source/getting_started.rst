@@ -27,7 +27,7 @@ Pixi
 For isolated development work we recommend the `Pixi <https://pixi.sh>`_ package management tool.
 ROS and all required dependencies are installable through `conda` and `Robostack <https://robostack.github.io>`_.
 
-Different versions of ROS (humble, jazzy, kilted, lyrical, and rolling) are supported with pixi environments.
+Different versions of ROS (jazzy, kilted, lyrical, and rolling) are supported with pixi environments.
 The environments are available for Linux, macOS, and Windows.
 
 First, install Pixi using `these instructions <https://pixi.sh/latest/#installation>`_.
@@ -119,7 +119,7 @@ Lastly, as a ``colcon`` package, the wrappers can be compiled in any valid ROS 2
     mkdir -p ~/roboplan_ws/src
     cd ~/roboplan_ws/src
     git clone https://github.com/open-planning/roboplan-ros.git
-    git clone --branch 0.6.1 https://github.com/open-planning/roboplan.git
+    git clone --branch 0.7.0 https://github.com/open-planning/roboplan.git
 
 **NOTE:** To compile the bindings you should install nanobind from pip:
 
