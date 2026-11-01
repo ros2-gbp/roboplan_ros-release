@@ -52,6 +52,9 @@ Once set up, you can run the ``pixi`` tasks as follows.
     # Show test results
     pixi run -e jazzy test-result
 
+    # Remove the build/install directories
+    pixi run clean
+
 Once the workspace is built, it can be used as a "normal" ROS 2 workspace.
 That is, the workspace can be sourced and used as expected.
 
@@ -70,7 +73,7 @@ That is, the workspace can be sourced and used as expected.
     colcon test
 
     # Or launch an example
-    ros2 launch roboplan_ros_franka franka_example_planning.launch.yaml
+    ros2 launch roboplan_ros_franka franka_example_planning.launch.py
 
 The examples from the upstream repository should also be available, as well:
 
@@ -80,7 +83,7 @@ The examples from the upstream repository should also be available, as well:
 
 
 **NOTE:** All ROS distros will share build/install directories by default.
-Be sure to ``rm -rf build/* install/*`` when switching between ROS versions or things will break.
+Be sure to run ``pixi run clean`` when switching between ROS versions or things will break.
 
 
 ---
@@ -119,7 +122,7 @@ Lastly, as a ``colcon`` package, the wrappers can be compiled in any valid ROS 2
     mkdir -p ~/roboplan_ws/src
     cd ~/roboplan_ws/src
     git clone https://github.com/open-planning/roboplan-ros.git
-    git clone --branch 0.7.0 https://github.com/open-planning/roboplan.git
+    git clone --branch 0.8.0 https://github.com/open-planning/roboplan.git
 
 **NOTE:** To compile the bindings you should install nanobind from pip:
 
